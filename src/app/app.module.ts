@@ -14,6 +14,9 @@ import { ForgotPasswordComponent } from './components/forgot-password/forgot-pas
 import { VerifyEmailComponent } from './components/verify-email/verify-email.component';
 import { AuthService } from './shared/services/auth.service';
 import { AngularFirestoreModule } from '@angular/fire/firestore';
+import { AddPersonagemComponent } from './personagem/add-personagem/add-personagem.component';
+import { EditPersonagemComponent } from './personagem/edit-personagem/edit-personagem.component';
+import { ListPersonagemComponent } from './personagem/list-personagem/list-personagem.component';
 
 
 @NgModule({
@@ -23,7 +26,10 @@ import { AngularFirestoreModule } from '@angular/fire/firestore';
     SignInComponent,
     SignUpComponent,
     ForgotPasswordComponent,
-    VerifyEmailComponent
+    VerifyEmailComponent,
+    AddPersonagemComponent,
+    EditPersonagemComponent,
+    ListPersonagemComponent
   ],
   imports: [
     BrowserModule,
