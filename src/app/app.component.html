@@ -1,17 +1,17 @@
 <!-- Top navigation -->
 <nav *ngIf="authService.userData as user" class="navbar fixed-top navbar-dark navbar-expand-lg bg-info justify-content-between">
-  <a class="navbar-brand" href="#">Personagens</a>
+  <a class="navbar-brand" routerLink="list-personagem">Personagens</a>
   <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarTogglerDemo02" aria-controls="navbarTogglerDemo02" aria-expanded="false" aria-label="Toggle navigation">
     <span class="navbar-toggler-icon"></span>
   </button>
 
   <div class="collapse navbar-collapse" id="navbarTogglerDemo02">
     <ul class="navbar-nav mr-auto mt-2 mt-lg-0">
-      <li class="nav-item active">
-        <a class="nav-link" href="#">Home <span class="sr-only">(current)</span></a>
+      <li class="nav-item">
+        <a class="nav-link" routerLink="dashboard">Home</a>
       </li>
       <li class="nav-item">
-        <a class="nav-link" href="#">Link</a>
+        <a class="nav-link" routerLink="feed">feed</a>
       </li>
       <li class="nav-item">
         <a class="nav-link" href="#" (click)="authService.SignOut()">
@@ -25,9 +25,9 @@
       --> 
     </ul>
     <form class="form-inline my-2 my-lg-0">
-      <input class="form-control mr-sm-2" type="search" placeholder="Search">
+      <input class="form-control mr-sm-2" type="search" placeholder="Pesquisar">
       <!--<button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>-->
-      <button class="btn btn-outline-light my-2 my-sm-0" type="submit">Search</button>
+      <button class="btn btn-outline-light my-2 my-sm-0" type="submit"><i class="fa fa-search"></i></button>
     </form>
   </div>
 </nav>

@@ -17,6 +17,7 @@ import { AngularFirestoreModule } from '@angular/fire/firestore';
 import { AddPersonagemComponent } from './personagem/add-personagem/add-personagem.component';
 import { EditPersonagemComponent } from './personagem/edit-personagem/edit-personagem.component';
 import { ListPersonagemComponent } from './personagem/list-personagem/list-personagem.component';
+import { FeedComponent } from './components/feed/feed.component';
 
 
 @NgModule({
@@ -29,7 +30,8 @@ import { ListPersonagemComponent } from './personagem/list-personagem/list-perso
     VerifyEmailComponent,
     AddPersonagemComponent,
     EditPersonagemComponent,
-    ListPersonagemComponent
+    ListPersonagemComponent,
+    FeedComponent
   ],
   imports: [
     BrowserModule,
