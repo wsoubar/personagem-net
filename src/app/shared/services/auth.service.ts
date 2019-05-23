@@ -29,6 +29,7 @@ export class AuthService {
       }
     })
   }
+
   // Sign in with email/password
   SignIn(email, password) {
     return this.afAuth.auth.signInWithEmailAndPassword(email, password)
@@ -42,6 +43,7 @@ export class AuthService {
         window.alert(error.message)
       })
   }
+
   // Sign up with email/password
   SignUp(email, password) {
     return this.afAuth.auth.createUserWithEmailAndPassword(email, password)
@@ -54,6 +56,7 @@ export class AuthService {
         window.alert(error.message)
       })
   }
+
   // Send email verfificaiton when new user sign up
   SendVerificationMail() {
     return this.afAuth.auth.currentUser.sendEmailVerification()
@@ -61,6 +64,7 @@ export class AuthService {
         this.router.navigate(['verify-email-address']);
       })
   }
+
   // Reset Forggot password
   ForgotPassword(passwordResetEmail) {
     return this.afAuth.auth.sendPasswordResetEmail(passwordResetEmail)
@@ -70,6 +74,7 @@ export class AuthService {
         window.alert(error)
       })
   }
+  
   // Returns true when user is looged in and email is verified
   get isLoggedIn(): boolean {
     const user = JSON.parse(localStorage.getItem('user'));
@@ -84,6 +89,7 @@ export class AuthService {
   FacebookAuth() {
     return this.AuthLogin(new auth.FacebookAuthProvider());
   }
+  
   // Auth logic to run auth providers
   AuthLogin(provider) {
     return this.afAuth.auth.signInWithPopup(provider)
@@ -96,6 +102,7 @@ export class AuthService {
         window.alert(error)
       })
   }
+  
   /* Setting up user data when sign in with username/password, 
   sign up with username/password and sign in with social auth  
   provider in Firestore database using AngularFirestore + AngularFirestoreDocument service */
@@ -112,6 +119,7 @@ export class AuthService {
       merge: true
     })
   }
+
   // Sign out 
   SignOut() {
     return this.afAuth.auth.signOut().then(() => {
