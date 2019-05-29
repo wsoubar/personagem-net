@@ -13,4 +13,7 @@ export class DashboardComponent implements OnInit {
   ngOnInit() {
   }
 
+  verificado(verified: boolean) {
+    return verified ? 'Sim' : 'Não';
+  }
 }

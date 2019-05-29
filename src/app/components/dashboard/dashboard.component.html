@@ -1,26 +1,29 @@
-<div class="row">
-
-  <!-- Main content -->
-  <div class="col">
-    <div class="inner-adjust">
-      <div class="pt-3 pb-2 mb-3 border-bottom">
-        <h1 class="h2">User Profile</h1>
-      </div>
-      <!-- Show user data when logged in -->
-      <div class="row" *ngIf="authService.userData as user">
-        <div class="col-md-12">
+<div class="container" *ngIf="authService.userData as user">
+  <div class="row">
+    <!-- Main content -->
+    <div class="col">
+      <div class="inner-adjust">
+        <div class="pt-3 pb-2 mb-3 border-bottom">
+          <h1 class="h2"><span [innerHTML]="user.displayName"></span></h1>
+        </div>
+        <!-- Show user data when logged in -->
+        <div class="row">
           <div class="media">
             <img class="align-self-start mr-5 img-thumbnail rounded-circle" style="min-height: 100px; max-height:100px"
               src="{{(user.photoURL) ? user.photoURL : '/assets/dummy-user.png'}}" alt="{{user.displayName}}">
             <div class="media-body">
-              <h1>Hello: <strong>{{(user.displayName) ? user.displayName : 'User'}}</strong></h1>
-              <p>User ID: <strong>{{user.uid}}</strong></p>
-              <p>Email: <strong>{{user.email}}</strong></p>
-              <p>Email Verified: <strong>{{user.emailVerified}}</strong></p>
+              <p>User ID: <strong><span [innerHTML]="user.uid"></span></strong></p>
+              <p>Email: <strong><span [innerHTML]="user.email"></span></strong></p>
+              <p>Email Verificado: <strong><span [innerHTML]="verificado(user.emailVerified)"></span></strong></p>
             </div>
           </div>
         </div>
       </div>
+    </div>
+  </div>
+  <div class="row border-top">
+    <div class="col">
+      <app-list-personagem></app-list-personagem>
     </div>
   </div>
 </div>

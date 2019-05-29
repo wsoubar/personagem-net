@@ -1,10 +1,19 @@
-<div class="card" style="width: 18rem;">
-  <img class="card-img-top" src="assets/img/temp.jpg" alt="Card image cap">
-  <div class="card-body">
-    <h5 class="card-title">Card title</h5>
-    <h6 class="card-subtitle mb-2 text-muted">Card subtitle</h6>
-    <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
-    <a href="#" class="card-link">Card link</a>
-    <a href="#" class="card-link">Another link</a>
+<div class="h2 personagem-tittle">Personagens</div>
+<div class="card flex-row flex-wrap" *ngFor="let personagem of personagens">
+  <div class="card-header border-0">
+      <img src="//placehold.it/200" alt="">
+  </div>
+  <div class="card-block px-2">
+      <h4 class="card-title" [innerHTML]="personagem.nome">Title</h4>
+      <p class="card-text" [innerHTML]="personagem.resumo">Description</p>
+      <a href="#" class="btn btn-primary">Editar</a>
+  </div>
+  <div class="w-100"></div>
+  <div class="card-footer w-100 text-muted">
+      Footer stating cats are CUTE little animals
   </div>
 </div>
+<div [hidden]="personagens">
+    Teste
+</div>
+<br>

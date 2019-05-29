@@ -1,4 +1,7 @@
 import { Component, OnInit } from '@angular/core';
+import { PersonagemService } from 'src/app/shared/services/personagem.service';
+import { AuthService } from 'src/app/shared/services/auth.service';
+import { Personagem } from 'src/app/shared/model/personagem.model';
 
 @Component({
   selector: 'app-list-personagem',
@@ -7,9 +10,28 @@ import { Component, OnInit } from '@angular/core';
 })
 export class ListPersonagemComponent implements OnInit {
 
-  constructor() { }
+  constructor(private perService: PersonagemService, private authService: AuthService) { }
+
+  personagens: Personagem[];
 
   ngOnInit() {
+    this.listPersonagens();
+  }
+
+  listPersonagens() {
+    console.log('listPersonagens');
+    this.perService.listByUserId(this.authService.userData.uid).subscribe(
+      //data => (this.personagens = data)
+      data => {
+        console.log('data', data);
+        this.personagens = data.map (e=>{
+          return {
+            id: e.payload.doc.id,
+            ...e.payload.doc.data()
+          } as Personagem
+        });
+      }
+    );
   }
 
 }
