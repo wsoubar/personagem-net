@@ -25,6 +25,11 @@ export class PersonagemService {
         return this.firestore.collection(this.personagemRef, ref => ref.where('userID', '==', userID)).snapshotChanges();
     }
 
+    getByID(id: string) {
+        return this.firestore.doc(this.personagemRef + '/' + id).snapshotChanges();
+    }
+
+
     /*
      * inclui um personagem  
      */
@@ -42,7 +47,7 @@ export class PersonagemService {
     /*
      * remover um personagem  
      */
-    delete(personagemID: string) {
-        return this.firestore.doc(this.personagemRef + '/' + personagemID).delete();
+    delete(id: string) {
+        return this.firestore.doc(this.personagemRef + '/' + id).delete();
     } 
 }

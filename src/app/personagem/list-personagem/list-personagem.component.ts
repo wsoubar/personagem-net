@@ -18,6 +18,11 @@ export class ListPersonagemComponent implements OnInit {
     this.listPersonagens();
   }
 
+  delete(id: string) {
+    console.log('delete ', id);
+    this.perService.delete(id);
+  }
+
   listPersonagens() {
     console.log('listPersonagens');
     this.perService.listByUserId(this.authService.userData.uid).subscribe(
