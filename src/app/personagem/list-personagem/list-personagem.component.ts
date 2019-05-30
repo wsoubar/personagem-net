@@ -10,7 +10,7 @@ import { Personagem } from 'src/app/shared/model/personagem.model';
 })
 export class ListPersonagemComponent implements OnInit {
 
-  constructor(private perService: PersonagemService, private authService: AuthService) { }
+  constructor(private personagemService: PersonagemService, private authService: AuthService) { }
 
   personagens: Personagem[];
 
@@ -20,12 +20,12 @@ export class ListPersonagemComponent implements OnInit {
 
   delete(id: string) {
     console.log('delete ', id);
-    this.perService.delete(id);
+    this.personagemService.delete(id);
   }
 
   listPersonagens() {
     console.log('listPersonagens');
-    this.perService.listByUserId(this.authService.userData.uid).subscribe(
+    this.personagemService.listAllByUserId(this.authService.userData.uid).subscribe(
       //data => (this.personagens = data)
       data => {
         console.log('data', data);

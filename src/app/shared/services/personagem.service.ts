@@ -21,12 +21,12 @@ export class PersonagemService {
     /*
      * busca todos os personagens de um usuário
      */
-    listByUserId(userID: string) {
+    listAllByUserId(userID: string) {
         return this.firestore.collection(this.personagemRef, ref => ref.where('userID', '==', userID)).snapshotChanges();
     }
 
     getByID(id: string) {
-        return this.firestore.doc(this.personagemRef + '/' + id).snapshotChanges();
+        return this.firestore.doc<Personagem>(this.personagemRef + '/' + id).valueChanges();
     }
 
 

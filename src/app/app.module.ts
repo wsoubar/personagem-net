@@ -18,6 +18,8 @@ import { AddPersonagemComponent } from './personagem/add-personagem/add-personag
 import { EditPersonagemComponent } from './personagem/edit-personagem/edit-personagem.component';
 import { ListPersonagemComponent } from './personagem/list-personagem/list-personagem.component';
 import { FeedComponent } from './components/feed/feed.component';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { ToastrModule } from 'ngx-toastr';
 
 
 @NgModule({
@@ -39,7 +41,9 @@ import { FeedComponent } from './components/feed/feed.component';
     AngularFireModule.initializeApp(environment.firebaseConfig),
     AngularFireDatabaseModule,
     AngularFireAuthModule,
-    AngularFirestoreModule
+    AngularFirestoreModule,
+    BrowserAnimationsModule,
+    ToastrModule.forRoot()
   ],
   providers: [AuthService],
   bootstrap: [AppComponent]
