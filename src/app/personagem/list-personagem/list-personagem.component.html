@@ -7,8 +7,8 @@
           <th scope="col" style="width: 10%">#</th>
           <th scope="col" style="width: 50%">Nome</th>
           <th scope="col" style="width: 20%">Data de Criação</th>
-          <th scope="col" style="width: 5%">Editar</th>
-          <th scope="col" style="width: 5%">Excluir</th>
+          <th scope="col" style="width: 5%">&nbsp;</th>
+          <th scope="col" style="width: 5%">&nbsp;</th>
         </tr>
       </thead>
       <tbody>
@@ -22,7 +22,8 @@
             </button>
           </td>
           <td>
-            <button type="button" class="btn btn-primary" [routerLink]="['/edit-personagem', p.id]">
+            <button type="button" class="btn btn-primary" title="Editar" 
+              [routerLink]="['/edit-personagem', p.id]">
               <i class="fa fa-edit"></i>
             </button>
           </td>
@@ -35,7 +36,20 @@
 
   </div>
 </div>
-<div [hidden]="personagens">
-  Nenhum personagem cadastrado. Crie um novo personagem
-</div>
 <br>
+<button type="button" class="btn btn-secondary" data-toggle="tooltip" data-placement="top" title="Tooltip on top">
+    Tooltip on top
+  </button>
+  <button type="button" class="btn btn-secondary" data-toggle="tooltip" data-placement="right" title="Tooltip on right">
+    Tooltip on right
+  </button>
+  <button type="button" class="btn btn-secondary" data-toggle="tooltip" data-placement="bottom" title="Tooltip on bottom">
+    Tooltip on bottom
+  </button>
+  <button type="button" class="btn btn-secondary" data-toggle="tooltip" data-placement="left" title="Tooltip on left">
+    Tooltip on left
+  </button>
+  <br>
+  <br>
+  <br>
+  <br>

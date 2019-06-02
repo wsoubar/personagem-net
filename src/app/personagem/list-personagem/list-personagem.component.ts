@@ -3,19 +3,25 @@ import { PersonagemService } from 'src/app/shared/services/personagem.service';
 import { AuthService } from 'src/app/shared/services/auth.service';
 import { Personagem } from 'src/app/shared/model/personagem.model';
 
+declare var $: any;
+
 @Component({
   selector: 'app-list-personagem',
   templateUrl: './list-personagem.component.html',
   styleUrls: ['./list-personagem.component.scss']
 })
 export class ListPersonagemComponent implements OnInit {
-
+  
   constructor(private personagemService: PersonagemService, private authService: AuthService) { }
 
   personagens: Personagem[];
 
   ngOnInit() {
     this.listPersonagens();
+    $(document).ready(() => {
+      $('[data-toggle="tooltip"]').tooltip();
+    });
+
   }
 
   delete(id: string) {

@@ -21,7 +21,7 @@ export class EditPersonagemComponent implements OnInit {
   ngOnInit() {
     const routeParams = this.activatedRoute.snapshot.params;
     const id = routeParams.id;
-    this.toastr.info("Toastr teste : " + id);
+    //this.toastr.info("Toastr teste : " + id);
     this.service.getByID(id).subscribe(
       data => {
         //console.log('data personagem', data);
