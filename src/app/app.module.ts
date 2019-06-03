@@ -20,6 +20,7 @@ import { ListPersonagemComponent } from './personagem/list-personagem/list-perso
 import { FeedComponent } from './components/feed/feed.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { ToastrModule } from 'ngx-toastr';
+import {FormsModule} from '@angular/forms';
 
 
 @NgModule({
@@ -43,7 +44,8 @@ import { ToastrModule } from 'ngx-toastr';
     AngularFireAuthModule,
     AngularFirestoreModule,
     BrowserAnimationsModule,
-    ToastrModule.forRoot()
+    ToastrModule.forRoot(),
+    FormsModule
   ],
   providers: [AuthService],
   bootstrap: [AppComponent]

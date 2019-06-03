@@ -3,6 +3,7 @@ import { ActivatedRoute, Router, ParamMap } from '@angular/router';
 import { PersonagemService } from 'src/app/shared/services/personagem.service';
 import { Personagem } from 'src/app/shared/model/personagem.model';
 import { ToastrService } from 'ngx-toastr';
+import {FormsModule} from '@angular/forms';
 
 @Component({
   selector: 'app-edit-personagem',
@@ -11,7 +12,7 @@ import { ToastrService } from 'ngx-toastr';
 })
 export class EditPersonagemComponent implements OnInit {
 
-  personagem: Personagem;
+  personagem = new Personagem();
 
   constructor(private activatedRoute: ActivatedRoute,
     private service: PersonagemService,
@@ -24,7 +25,8 @@ export class EditPersonagemComponent implements OnInit {
     //this.toastr.info("Toastr teste : " + id);
     this.service.getByID(id).subscribe(
       data => {
-        //console.log('data personagem', data);
+        console.log('data personagem', data);
+        //data.id = id;
         this.personagem = data;
       }
     );

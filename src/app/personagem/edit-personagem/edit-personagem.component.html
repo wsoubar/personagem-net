@@ -2,5 +2,25 @@
   edit-personagem works!
 </p>
 <p>
-  Personagem: <span [innerHTML]="personagem?.nome"></span>
+  Personagem: {{ personagem?.nome }}
 </p>
+<form>
+  <div class="form-group">
+    <label for="id">ID</label>
+    <input type="text" class="form-control" id="id"
+     [(ngModel)]="personagem.id" name="id" placeholder="ID" [disabled]="true">
+  </div>
+  <div class="form-group">
+    <label for="nomeIn">Nome</label>
+    <input type="text" class="form-control" id="nomeIn" aria-describedby="emailHelp" placeholder="Nome do Personagem">
+  </div>
+  <div class="form-group">
+    <label for="exampleInputPassword1">Password</label>
+    <input type="password" class="form-control" id="exampleInputPassword1" placeholder="Password">
+  </div>
+  <div class="form-check">
+    <input type="checkbox" class="form-check-input" id="exampleCheck1">
+    <label class="form-check-label" for="exampleCheck1">Check me out</label>
+  </div>
+  <button type="submit" class="btn btn-primary">Submit</button>
+</form>

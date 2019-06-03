@@ -34,7 +34,7 @@ export class ListPersonagemComponent implements OnInit {
     this.personagemService.listAllByUserId(this.authService.userData.uid).subscribe(
       //data => (this.personagens = data)
       data => {
-        console.log('data', data);
+        //console.log('data', data);
         this.personagens = data.map (e=>{
           return {
             id: e.payload.doc.id,
