@@ -1,50 +1,57 @@
-# See http://help.github.com/ignore-files/ for more about ignoring files.
+# Dependências e artefatos gerados
+/node_modules/
+/dist/
+/out-tsc/
+/tmp/
+/coverage/
+/.angular/
+/.sass-cache/
 
-# compiled output
-/dist
-/tmp
-/out-tsc
+# Playwright
+/playwright-report/
+/test-results/
+/blob-report/
+/playwright/.cache/
 
-# dependencies
-/node_modules
+# Firebase: cache, exportações locais e configuração da instalação
+/.firebase/
+/firebase-export-*/
+/src/assets/firebase-config.local.json
+# Compatibilidade com configurações privadas do projeto antigo
 /src/environments/**
 
-# profiling files
+# Credenciais e configurações locais
+/.aws/
+/.codex/
+.env
+.env.*
+!.env.example
+!.env.*.example
+
+# Logs e arquivos de diagnóstico
+*-debug.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+/libpeerconnection.log
 chrome-profiler-events.json
 speed-measure-plugin.json
 
-# IDEs and editors
-/.idea
+# IDEs e editores
+/.idea/
 .project
 .classpath
 .c9/
 *.launch
 .settings/
 *.sublime-workspace
-
-# IDE - VSCode
 .vscode/*
 !.vscode/settings.json
 !.vscode/tasks.json
 !.vscode/launch.json
 !.vscode/extensions.json
 
-# misc
-/.sass-cache
-/connect.lock
-/coverage
-/libpeerconnection.log
-npm-debug.log
-yarn-error.log
-testem.log
-/typings
-
-# System Files
+# Arquivos do sistema operacional
 .DS_Store
 Thumbs.db
-# Recuperação local e testes
-/.angular/
-/playwright-report/
-/test-results/
-/*-debug.log
-/src/assets/firebase-config.local.json

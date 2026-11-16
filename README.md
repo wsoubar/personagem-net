@@ -66,7 +66,7 @@ O alerta CVE-2026-119192 vinha de `@angular-devkit/build-angular → webpack-dev
 
 Há overrides explícitos para versões corrigidas de `@grpc/grpc-js`, `glob`, `uuid` e `@opentelemetry/core`. Eles cobrem dependências transitivas cujos pacotes pais ainda restringem versões vulneráveis. As trocas de versão principal de Glob, UUID e OpenTelemetry exigem atenção: os fluxos utilizados aqui foram testados; outros comandos do Firebase CLI, como deploy, não foram validados. Reavalie os overrides ao atualizar os pacotes pais; não use `npm audit fix --force` sem revisar os impactos.
 
-As configurações antigas de Karma, TSLint, Protractor, `src/polyfills.ts` e `src/test.ts` permanecem como histórico e não participam dos comandos atuais. Os arquivos `3.4`, `package-looo.son`, `notas/` e recursos estáticos também foram preservados. O lockfile usado pelo npm é exclusivamente `package-lock.json`.
+As configurações e os testes legados de Karma, TSLint e Protractor foram removidos, junto com arquivos auxiliares sem uso. As notas e imagens históricas foram preservadas. O lockfile usado pelo npm é exclusivamente `package-lock.json`.
 
 ## Organização
 

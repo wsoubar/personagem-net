@@ -17,7 +17,7 @@
 - `src/app/shared/services/`: estado de autenticação, Firebase modular, mensagens e acesso a dados; `shared/model/`: modelos.
 - `src/config/`: ambientes e exemplo de configuração Web pública. Os antigos `src/environments/` não são usados.
 - `tests/`: regras Firestore e Playwright. Testes unitários `*.spec.ts` próximos ao código usam Vitest pelo builder Angular.
-- As configurações legadas de Karma, Protractor, TSLint, `src/polyfills.ts` e `src/test.ts` estão preservadas como histórico, fora dos comandos atuais. Não reative essas ferramentas por engano.
+- As configurações e os testes legados de Karma, Protractor e TSLint foram removidos. Use apenas os comandos e testes atuais descritos abaixo.
 
 ## Convenções
 
