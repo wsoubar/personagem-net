@@ -92,3 +92,30 @@ test('recupera autenticação e consulta personagens sem acessar serviços reais
     expect(external).toEqual([]);
   } finally { await env.cleanup(); }
 });
+
+test('entra pela demonstração sem preencher login e mantém a sessão ao recarregar', async ({ page }) => {
+  const errors: string[] = [];
+  page.on('pageerror', error => errors.push(error.message));
+  await page.goto('/sign-in');
+  await page.getByRole('button', { name: 'Entrar sem cadastro (demonstração)' }).click();
+  await expect(page).toHaveURL(/dashboard$/);
+  await expect(page.getByRole('heading', { name: 'Visitante de demonstração' })).toBeVisible();
+  await expect(page.getByRole('cell', { name: 'Explorador (exemplo)', exact: true })).toBeVisible();
+  await expect(page.getByRole('cell', { name: 'Cronista (exemplo)', exact: true })).toBeVisible();
+  await page.reload();
+  await expect(page.getByRole('cell', { name: 'Explorador (exemplo)', exact: true })).toBeVisible();
+  await expect(page.getByRole('row')).toHaveCount(3);
+  await page.getByRole('link', { name: 'Ver personagem Explorador (exemplo)' }).click();
+  await expect(page.getByText('Personagem fictício para conhecer a listagem e a tela de detalhes.')).toBeVisible();
+  await page.goto('/add-personagem');
+  await expect(page.getByText('A inclusão de personagens ainda não foi implementada neste protótipo.')).toBeVisible();
+  await page.goto('/feed');
+  await expect(page.getByText('O feed ainda não foi implementado neste protótipo.')).toBeVisible();
+  await page.goto('/dashboard');
+  await page.screenshot({ path: 'test-results/demonstracao-local.png', fullPage: true });
+  await page.getByRole('button', { name: 'Sair', exact: true }).click();
+  await expect(page).toHaveURL(/sign-in$/);
+  await page.goto('/dashboard');
+  await expect(page).toHaveURL(/sign-in$/);
+  expect(errors).toEqual([]);
+});

@@ -26,6 +26,8 @@ npm start
 
 Abra `http://localhost:4200`. O desenvolvimento usa **somente** o projeto fictício `demo-personagens`, com Authentication em `127.0.0.1:9099` e Firestore em `127.0.0.1:8080`. Não precisa de login no Firebase CLI nem de credenciais reais. Os dados de teste são descartados quando os emuladores encerram; links de verificação e recuperação aparecem no terminal do emulador.
 
+Na tela de entrada, clique em **Entrar sem cadastro (demonstração)** para abrir o dashboard com dois personagens fictícios, sem informar e-mail ou senha. O acesso cria uma sessão anônima e dados apenas nos emuladores locais; os guards e as regras do Firestore continuam ativos. O link não aparece no build de produção e o método também bloqueia seu uso fora desse ambiente local. Use **Sair** para encerrar a sessão de demonstração.
+
 ## Verificações
 
 ```sh
@@ -38,7 +40,7 @@ npm run e2e
 npm audit
 ```
 
-`test:rules` e `e2e` iniciam e encerram seus próprios emuladores. Encerre uma execução manual de `npm run emulators` antes de usá-los. O teste de navegador também inicia o servidor Angular e um servidor local do build de produção; as portas 4200, 4300, 8080 e 9099 devem estar livres. A primeira execução baixa binários públicos dos emuladores e do navegador.
+`test:rules` e `e2e` iniciam e encerram seus próprios emuladores. Encerre uma execução manual de `npm run emulators` antes de usá-los. O teste de navegador também inicia o servidor Angular e um servidor local do build de produção; as portas 4201, 4300, 8080 e 9099 devem estar livres. A primeira execução baixa binários públicos dos emuladores e do navegador.
 
 O cenário de produção também confirma que, sem configuração, nenhuma chamada externa é feita. Os testes cobrem restauração de sessão, rejeição de `localStorage` forjado, cadastro, verificação e recuperação de e-mail, entrada e saída, leitura por proprietário, documentos ausentes, datas ausentes, acesso negado e navegação móvel. As regras locais têm testes de isolamento entre usuários e preservação de propriedade. Esses resultados não comprovam a segurança das regras do Firebase remoto.
 

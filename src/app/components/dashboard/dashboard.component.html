@@ -1,6 +1,6 @@
 <section *ngIf="authService.userData as user">
   <h1>{{ user.displayName || 'Minha conta' }}</h1>
-  <p>E-mail: <strong>{{ user.email }}</strong></p>
+  <p>E-mail: <strong>{{ user.email || 'Conta de demonstração' }}</strong></p>
   <p>E-mail verificado: {{ verificado(user.emailVerified) }}</p>
   <app-list-personagem></app-list-personagem>
 </section>
