@@ -1,131 +1,136 @@
-import { Injectable, NgZone } from '@angular/core';
-import { User } from "../model/user.model";
-import { auth } from 'firebase/app';
-import { AngularFireAuth } from "@angular/fire/auth";
-import { AngularFirestore, AngularFirestoreDocument } from '@angular/fire/firestore';
-//import { AngularFireDatabase } from '@angular/fire/database';
-import { Router } from "@angular/router";
-@Injectable({
-  providedIn: 'root'
-})
+import { DestroyRef, Injectable, inject, signal } from '@angular/core';
+import { Router } from '@angular/router';
+import {
+  AuthProvider, FacebookAuthProvider, GoogleAuthProvider, User,
+  createUserWithEmailAndPassword, onAuthStateChanged, sendEmailVerification,
+  sendPasswordResetEmail, signInWithEmailAndPassword, signInWithPopup, signOut
+} from 'firebase/auth';
+import { doc, setDoc } from 'firebase/firestore';
+import { ReplaySubject } from 'rxjs';
+import { FirebaseService } from './firebase.service';
+import { NoticeService } from './notice.service';
 
+@Injectable({ providedIn: 'root' })
 export class AuthService {
-  userData: any; // Save logged in user data
-  constructor(
-    public afs: AngularFirestore,   // Inject Firestore service
-    public afAuth: AngularFireAuth, // Inject Firebase auth service
-    public router: Router,
-    public ngZone: NgZone // NgZone service to remove outside scope warning
-  ) {
-    /* Saving user data in localstorage when 
-    logged in and setting up null when logged out */
-    this.afAuth.authState.subscribe(user => {
-      if (user) {
-        this.userData = user;
-        localStorage.setItem('user', JSON.stringify(this.userData));
-        JSON.parse(localStorage.getItem('user'));
-      } else {
-        localStorage.setItem('user', null);
-        JSON.parse(localStorage.getItem('user'));
-      }
-    })
-  }
+  private readonly firebase = inject(FirebaseService);
+  private readonly router = inject(Router);
+  private readonly notice = inject(NoticeService);
+  private readonly state = new ReplaySubject<User | null>(1);
+  private readonly currentUser = signal<User | null>(null);
+  readonly user$ = this.state.asObservable();
+  readonly busy = signal(false);
 
-  // Sign in with email/password
-  SignIn(email, password) {
-    return this.afAuth.auth.signInWithEmailAndPassword(email, password)
-      .then((result) => {
-        this.ngZone.run(() => {
-          console.log('vai para dashboard');
-          this.router.navigate(['dashboard']);
-        });
-        this.SetUserData(result.user);
-      }).catch((error) => {
-        window.alert(error.message)
-      })
-  }
-
-  // Sign up with email/password
-  SignUp(email, password) {
-    return this.afAuth.auth.createUserWithEmailAndPassword(email, password)
-      .then((result) => {
-        /* Call the SendVerificaitonMail() function when new user sign 
-        up and returns promise */
-        this.SendVerificationMail();
-        this.SetUserData(result.user);
-      }).catch((error) => {
-        window.alert(error.message)
-      })
-  }
-
-  // Send email verfificaiton when new user sign up
-  SendVerificationMail() {
-    return this.afAuth.auth.currentUser.sendEmailVerification()
-      .then(() => {
-        this.router.navigate(['verify-email-address']);
-      })
-  }
-
-  // Reset Forggot password
-  ForgotPassword(passwordResetEmail) {
-    return this.afAuth.auth.sendPasswordResetEmail(passwordResetEmail)
-      .then(() => {
-        window.alert('Password reset email sent, check your inbox.');
-      }).catch((error) => {
-        window.alert(error)
-      })
-  }
-  
-  // Returns true when user is looged in and email is verified
-  get isLoggedIn(): boolean {
-    const user = JSON.parse(localStorage.getItem('user'));
-    //return (user !== null && user.emailVerified !== false) ? true : false;
-    return (user !== null) ? true : false;
-  }
-  // Sign in with Google
-  GoogleAuth() {
-    return this.AuthLogin(new auth.GoogleAuthProvider());
-  }
-
-  FacebookAuth() {
-    return this.AuthLogin(new auth.FacebookAuthProvider());
-  }
-  
-  // Auth logic to run auth providers
-  AuthLogin(provider) {
-    return this.afAuth.auth.signInWithPopup(provider)
-      .then((result) => {
-        this.ngZone.run(() => {
-          this.router.navigate(['dashboard']);
-        })
-        this.SetUserData(result.user);
-      }).catch((error) => {
-        window.alert(error)
-      })
-  }
-  
-  /* Setting up user data when sign in with username/password, 
-  sign up with username/password and sign in with social auth  
-  provider in Firestore database using AngularFirestore + AngularFirestoreDocument service */
-  SetUserData(user) {
-    const userRef: AngularFirestoreDocument<any> = this.afs.doc(`user/${user.uid}`);
-    const userData: User = {
-      id: user.uid,
-      email: user.email,
-      displayName: user.displayName,
-      photoURL: user.photoURL,
-      emailVerified: user.emailVerified
+  constructor() {
+    const auth = this.firebase.auth;
+    if (!auth) {
+      this.state.next(null);
+      this.notice.show('Firebase não configurado. Consulte o README para configurar esta instalação.');
+      return;
     }
-    return userRef.set(userData, {
-      merge: true
-    })
+    const unsubscribe = onAuthStateChanged(auth, user => {
+      this.currentUser.set(user);
+      this.state.next(user);
+    }, () => {
+      this.currentUser.set(null);
+      this.state.next(null);
+      this.notice.show('Não foi possível recuperar a sessão. Entre novamente.');
+    });
+    inject(DestroyRef).onDestroy(unsubscribe);
   }
 
-  // Sign out 
-  SignOut() {
-    return this.afAuth.auth.signOut().then(() => {
-      localStorage.removeItem('user');
-      this.router.navigate(['sign-in']);
-    })
+  get userData(): User | null { return this.currentUser(); }
+  get isLoggedIn(): boolean { return this.userData !== null; }
+
+  SignIn(email: string, password: string): Promise<void> {
+    return this.perform(async () => {
+      const result = await signInWithEmailAndPassword(this.requireAuth(), email, password);
+      await this.saveProfile(result.user);
+      await this.router.navigate(['/dashboard']);
+    });
+  }
+
+  SignUp(email: string, password: string): Promise<void> {
+    return this.perform(async () => {
+      const result = await createUserWithEmailAndPassword(this.requireAuth(), email, password);
+      await this.saveProfile(result.user);
+      await sendEmailVerification(result.user);
+      await this.router.navigate(['/verify-email-address']);
+      this.notice.show('Conta criada. Confira o e-mail de verificação.');
+    });
+  }
+
+  SendVerificationMail(): Promise<void> {
+    return this.perform(async () => {
+      const user = this.requireAuth().currentUser;
+      if (!user) { throw new Error('Entre na sua conta para verificar o e-mail.'); }
+      await sendEmailVerification(user);
+      this.notice.show('E-mail de verificação enviado.');
+    });
+  }
+
+  ForgotPassword(email: string): Promise<void> {
+    return this.perform(async () => {
+      await sendPasswordResetEmail(this.requireAuth(), email);
+      this.notice.show('Solicitação recebida. Confira sua caixa de entrada.');
+    });
+  }
+
+  GoogleAuth(): Promise<void> { return this.AuthLogin(new GoogleAuthProvider()); }
+  FacebookAuth(): Promise<void> { return this.AuthLogin(new FacebookAuthProvider()); }
+
+  AuthLogin(provider: AuthProvider): Promise<void> {
+    return this.perform(async () => {
+      const result = await signInWithPopup(this.requireAuth(), provider);
+      await this.saveProfile(result.user);
+      await this.router.navigate(['/dashboard']);
+    });
+  }
+
+  async SetUserData(user: User): Promise<void> {
+    await setDoc(doc(this.firebase.db, 'user', user.uid), {
+      id: user.uid, email: user.email, displayName: user.displayName,
+      photoURL: user.photoURL, emailVerified: user.emailVerified
+    }, { merge: true });
+  }
+
+  SignOut(): Promise<void> {
+    return this.perform(async () => {
+      await signOut(this.requireAuth());
+      this.currentUser.set(null);
+      this.state.next(null);
+      await this.router.navigate(['/sign-in']);
+    });
+  }
+
+  private requireAuth() {
+    if (!this.firebase.auth) { throw new Error('Firebase não configurado. Consulte o README.'); }
+    return this.firebase.auth;
+  }
+
+  private async saveProfile(user: User): Promise<void> {
+    try { await this.SetUserData(user); }
+    catch { this.notice.show('Sessão iniciada, mas não foi possível sincronizar o perfil.'); }
+  }
+
+  private async perform(operation: () => Promise<void>): Promise<void> {
+    if (this.busy()) { return; }
+    this.busy.set(true);
+    this.notice.show('');
+    try { await operation(); }
+    catch (error) {
+      const code = (error as { code?: string }).code;
+      const messages: Record<string, string> = {
+        'auth/invalid-credential': 'E-mail ou senha inválidos.',
+        'auth/invalid-email': 'Informe um e-mail válido.',
+        'auth/email-already-in-use': 'Este e-mail já está cadastrado.',
+        'auth/weak-password': 'Use uma senha com pelo menos seis caracteres.',
+        'auth/too-many-requests': 'Muitas tentativas. Aguarde e tente novamente.',
+        'auth/network-request-failed': 'Não foi possível conectar à autenticação.',
+        'auth/popup-closed-by-user': 'A entrada foi cancelada.',
+        'auth/operation-not-allowed': 'Este provedor de autenticação não está habilitado.'
+      };
+      this.notice.show(code ? (messages[code] ?? 'Não foi possível concluir a operação de autenticação.')
+        : error instanceof Error ? error.message : 'Não foi possível concluir a operação.');
+    } finally { this.busy.set(false); }
   }
 }

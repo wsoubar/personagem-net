@@ -1,53 +1,42 @@
-import { Injectable } from '@angular/core';
-import { AngularFirestore } from '@angular/fire/firestore';
+import { Injectable, inject } from '@angular/core';
+import {
+  addDoc, collection, deleteDoc, doc, onSnapshot, query, updateDoc, where
+} from 'firebase/firestore';
+import { Observable } from 'rxjs';
 import { Personagem } from '../model/personagem.model';
+import { FirebaseService } from './firebase.service';
 
-@Injectable({
-    providedIn: 'root'
-})
+@Injectable({ providedIn: 'root' })
 export class PersonagemService {
+  private readonly firebase = inject(FirebaseService);
+  readonly personagemRef = 'personagem';
 
-    personagemRef = 'personagem';
+  listAllByUserId(userID: string): Observable<Personagem[]> {
+    return new Observable(subscriber => {
+      const ref = query(collection(this.firebase.db, this.personagemRef), where('userID', '==', userID));
+      return onSnapshot(ref, snapshot => subscriber.next(snapshot.docs.map(item => ({
+        ...item.data(), id: item.id
+      } as Personagem))), error => subscriber.error(error));
+    });
+  }
 
-    constructor(private firestore: AngularFirestore) { }
+  getByID(id: string): Observable<Personagem | null> {
+    return new Observable(subscriber => onSnapshot(doc(this.firebase.db, this.personagemRef, id), snapshot => {
+      subscriber.next(snapshot.exists() ? { ...snapshot.data(), id: snapshot.id } as Personagem : null);
+    }, error => subscriber.error(error)));
+  }
 
-    /*
-     * busca todos os personagens 
-     */
-    listAll () {
-        return this.firestore.collection(this.personagemRef).snapshotChanges();
-    }
+  create(personagem: Personagem) {
+    const { id: _id, ...data } = personagem;
+    return addDoc(collection(this.firebase.db, this.personagemRef), data);
+  }
 
-    /*
-     * busca todos os personagens de um usuário
-     */
-    listAllByUserId(userID: string) {
-        return this.firestore.collection(this.personagemRef, ref => ref.where('userID', '==', userID)).snapshotChanges();
-    }
+  update(personagem: Personagem) {
+    const { id, ...data } = personagem;
+    return updateDoc(doc(this.firebase.db, this.personagemRef, id), data);
+  }
 
-    getByID(id: string) {
-        return this.firestore.doc<Personagem>(this.personagemRef + '/' + id).valueChanges();
-    }
-
-
-    /*
-     * inclui um personagem  
-     */
-    create(personagem: Personagem) {
-        return this.firestore.collection(this.personagemRef).add(personagem);
-    }
-
-    /*
-     * atualizar um personagem  
-     */
-    update(personagem: Personagem) {
-        return this.firestore.doc(this.personagemRef + '/' + personagem.id).update(personagem);
-    }
-
-    /*
-     * remover um personagem  
-     */
-    delete(id: string) {
-        return this.firestore.doc(this.personagemRef + '/' + id).delete();
-    } 
+  delete(id: string) {
+    return deleteDoc(doc(this.firebase.db, this.personagemRef, id));
+  }
 }

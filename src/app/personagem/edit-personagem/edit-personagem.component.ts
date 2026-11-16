@@ -1,36 +1,38 @@
-import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute, Router, ParamMap } from '@angular/router';
-import { PersonagemService } from 'src/app/shared/services/personagem.service';
-import { Personagem } from 'src/app/shared/model/personagem.model';
-import { ToastrService } from 'ngx-toastr';
-import {FormsModule} from '@angular/forms';
+import { Component, DestroyRef, inject, signal } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { ActivatedRoute } from '@angular/router';
+import { catchError, of, switchMap } from 'rxjs';
+import { PersonagemService } from '../../shared/services/personagem.service';
+import { Personagem } from '../../shared/model/personagem.model';
 
 @Component({
+  standalone: false,
   selector: 'app-edit-personagem',
   templateUrl: './edit-personagem.component.html',
   styleUrls: ['./edit-personagem.component.scss']
 })
-export class EditPersonagemComponent implements OnInit {
+export class EditPersonagemComponent {
+  readonly personagem = signal<Personagem | null>(null);
+  readonly loading = signal(true);
+  readonly error = signal('');
 
-  personagem = new Personagem();
-
-  constructor(private activatedRoute: ActivatedRoute,
-    private service: PersonagemService,
-    private toastr: ToastrService
-    ) { }
-
-  ngOnInit() {
-    const routeParams = this.activatedRoute.snapshot.params;
-    const id = routeParams.id;
-    //this.toastr.info("Toastr teste : " + id);
-    this.service.getByID(id).subscribe(
-      data => {
-        console.log('data personagem', data);
-        //data.id = id;
-        this.personagem = data;
-      }
-    );
-
+  constructor() {
+    const service = inject(PersonagemService);
+    inject(ActivatedRoute).paramMap.pipe(
+      switchMap(params => {
+        this.loading.set(true);
+        this.error.set('');
+        this.personagem.set(null);
+        const id = params.get('id');
+        return id ? service.getByID(id).pipe(catchError(() => {
+          this.error.set('Não foi possível carregar este personagem.');
+          return of(null);
+        })) : of(null);
+      }),
+      takeUntilDestroyed(inject(DestroyRef))
+    ).subscribe(value => {
+      this.personagem.set(value);
+      this.loading.set(false);
+    });
   }
-
 }

@@ -1,38 +1,14 @@
-<div class="display-table">
-  <div class="display-table-cell">
-    <div class="auth-block">
-      <h3>Sign Up</h3>
-      <div class="form-group">
-        <input type="email" class="form-control" placeholder="Email Address" #userEmail required>
-      </div>
-      <div class="form-group">
-        <input type="password" class="form-control" placeholder="Password" #userPwd required>
-      </div>
-      <div class="form-group">
-        <input type="button" class="btn btn-primary" value="Sign Up"
-          (click)="authService.SignUp(userEmail.value, userPwd.value)">
-      </div>
-      <div class="form-group">
-        <span class="or"><span class="or-inner">Or</span></span>
-      </div>
-      <!-- Continue with Google 
-      <div class="form-group">
-        <button type="button" class="btn googleBtn" (click)="authService.GoogleAuth()">
-          <i class="fab fa-google-plus-g"></i>
-          Continue with Google
-        </button>
-      </div>
-      -->
-      <!-- Continue with Facebook -->
-      <div class="form-group">
-        <button type="button" class="btn btn-facebook" (click)="authService.FacebookAuth()">
-          <i class="fa fa-facebook"></i>
-           | Continue with Facebook
-        </button>
-      </div>
-    </div>
-    <div>
-      <span>Already have an account? <a class="btn btn-primary" routerLink="/sign-in">Log In</a></span>
-    </div>
+<section class="auth-block">
+  <h1>Criar conta</h1>
+  <form (ngSubmit)="authService.SignUp(email.value, password.value)">
+    <div class="mb-3"><label for="email">E-mail</label><input id="email" type="email" class="form-control" autocomplete="email" #email required></div>
+    <div class="mb-3"><label for="password">Senha</label><input id="password" type="password" class="form-control" autocomplete="new-password" minlength="6" #password required></div>
+    <button type="submit" class="btn btn-primary" [disabled]="authService.busy()">Criar conta</button>
+  </form>
+  <div class="mt-3">
+    <button type="button" class="btn btn-outline-primary me-2" [disabled]="authService.busy()" (click)="authService.GoogleAuth()">Entrar com Google</button>
+    <button type="button" class="btn btn-outline-primary" [disabled]="authService.busy()" (click)="authService.FacebookAuth()">Entrar com Facebook</button>
   </div>
-</div>
+  <p class="mt-3"><a routerLink="/forgot-password">Esqueci minha senha</a></p>
+  <p><a routerLink="/sign-in">Já tenho uma conta</a></p>
+</section>

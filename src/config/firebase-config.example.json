@@ -1,0 +1,6 @@
+{
+  "apiKey": "SUBSTITUA_PELA_CHAVE_WEB_PUBLICA",
+  "authDomain": "SEU_PROJETO.firebaseapp.com",
+  "projectId": "SEU_PROJETO",
+  "appId": "SEU_APP_ID"
+}

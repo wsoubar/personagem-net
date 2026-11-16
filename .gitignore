@@ -42,3 +42,9 @@ testem.log
 # System Files
 .DS_Store
 Thumbs.db
+# Recuperação local e testes
+/.angular/
+/playwright-report/
+/test-results/
+/*-debug.log
+/src/assets/firebase-config.local.json

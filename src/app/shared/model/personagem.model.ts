@@ -1,9 +1,7 @@
-import { User } from './user.model';
-
 export class Personagem {
-    id: string;
-    nome: string;
-    resumo: string;
-    dataCriacao: Date;
-    userID: string;
+  id = '';
+  nome = '';
+  resumo = '';
+  dataCriacao: Date | { toDate(): Date } | null = null;
+  userID = '';
 }

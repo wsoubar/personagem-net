@@ -1,34 +1,15 @@
-<!-- Top navigation -->
-<nav *ngIf="authService.userData as user" class="navbar fixed-top navbar-dark navbar-expand-lg bg-danger justify-content-between">
-  <a class="navbar-brand" routerLink="list-personagem">Personagens</a>
-  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarTogglerDemo02" aria-controls="navbarTogglerDemo02" aria-expanded="false" aria-label="Toggle navigation">
-    <span class="navbar-toggler-icon"></span>
-  </button>
-
-  <div class="collapse navbar-collapse" id="navbarTogglerDemo02">
-    <ul class="navbar-nav mr-auto mt-2 mt-lg-0">
-      <li class="nav-item">
-        <a class="nav-link" routerLink="dashboard">Home</a>
-      </li>
-      <li class="nav-item">
-        <a class="nav-link" routerLink="feed">feed</a>
-      </li>
-      <li class="nav-item">
-        <a class="nav-link" href="#" (click)="authService.SignOut()">
-          <i class="fa fa-sign-out"></i> Log out
-        </a>
-      </li>
-      <!-- 
-      <li><a href="#"><i class="fa fa-twitter color-twitter"></i></a></li>
-      <li><a href="#"><i class="fa fa-facebook color-facebook"></i></a></li>
-      <li><a href="#"><i class="fa fa-linkedin color-linkedin"></i></a></li>       
-      --> 
-    </ul>
-    <form class="form-inline my-2 my-lg-0">
-      <input class="form-control mr-sm-2" type="search" placeholder="Pesquisar">
-      <!--<button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>-->
-      <button class="btn btn-outline-light my-2 my-sm-0" type="submit"><i class="fa fa-search"></i></button>
-    </form>
+<nav *ngIf="authService.userData" class="navbar sticky-top navbar-dark navbar-expand-lg bg-danger" aria-label="Navegação principal">
+  <div class="container">
+    <a class="navbar-brand" routerLink="/dashboard">Personagens</a>
+    <button class="navbar-toggler" type="button" (click)="menuOpen.set(!menuOpen())" aria-controls="main-menu" [attr.aria-expanded]="menuOpen()" aria-label="Alternar navegação"><span class="navbar-toggler-icon"></span></button>
+    <div class="collapse navbar-collapse" [class.show]="menuOpen()" id="main-menu">
+      <ul class="navbar-nav">
+        <li class="nav-item"><a class="nav-link" routerLink="/dashboard">Início</a></li>
+        <li class="nav-item"><a class="nav-link" routerLink="/feed">Feed</a></li>
+        <li class="nav-item"><button class="btn nav-link" type="button" [disabled]="authService.busy()" (click)="authService.SignOut()">Sair</button></li>
+      </ul>
+    </div>
   </div>
 </nav>
+<div *ngIf="notice.message()" class="alert alert-info" role="status">{{ notice.message() }}</div>
 <router-outlet></router-outlet>

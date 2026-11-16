@@ -4,7 +4,7 @@
 }
 
 body {
-  margin-top: 65px;
+  margin-top: 0;
 }
 /*
 .nav-link .active a {
@@ -12,3 +12,8 @@ body {
     background: #FF0000;
 }
 */
+
+.auth-block {
+  max-width: 30rem;
+  margin: 2rem auto;
+}

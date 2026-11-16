@@ -1,0 +1,18 @@
+rules_version = '2';
+// Proposta local para emuladores. Não publicar sem revisar o projeto existente.
+service cloud.firestore {
+  match /databases/{database}/documents {
+    function signedIn() { return request.auth != null; }
+    match /user/{uid} {
+      allow read, create, update, delete: if signedIn() && request.auth.uid == uid;
+    }
+    match /personagem/{id} {
+      allow get: if signedIn() && (!exists(/databases/$(database)/documents/personagem/$(id))
+        || resource.data.userID == request.auth.uid);
+      allow list, delete: if signedIn() && resource.data.userID == request.auth.uid;
+      allow create: if signedIn() && request.resource.data.userID == request.auth.uid;
+      allow update: if signedIn() && resource.data.userID == request.auth.uid
+        && request.resource.data.userID == resource.data.userID;
+    }
+  }
+}
